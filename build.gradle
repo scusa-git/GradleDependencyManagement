@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        maven { 
+        	//url 'https://repo.spring.io/plugins-snapshot' 
+        	url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.4.RELEASE'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mainClassName = 'hello.HelloWorld'
+
+ext {
+	springVersion = "5.0.3.RELEASE"
+	vaadinVersion = "8.3.0"
+}
+
+clean.doFirst {
+	delete 'target'
+}
+
+jar {
+	baseName='test'
+	version='0.1.0'
+	destinationDir=file('target')
+}
+
+war {
+	baseName='test'
+	version='0.1.0'
+	destinationDir=file('target')
+}
+
+dependencyManagement {
+     imports {
+          mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
+          mavenBom "org.springframework:spring-framework-bom:${springVersion}"
+     }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    //maven { url = "http://maven.vaadin.com/vaadin-addons"}
+}
+
+dependencies {
+
+	compile "com.vaadin:vaadin-client-compiled"
+	compile "com.vaadin:vaadin-server"
+   	compile "com.vaadin:vaadin-themes"
+   	
+   	//compile "com.vaadin:vaadin-spring:3.0.0"
+	compile "com.vaadin:vaadin-spring"
+	
+    compile "org.springframework:spring-beans"
+    compile "org.springframework:spring-context"
+    compile "org.springframework:spring-context-support"
+    compile "org.springframework:spring-core"
+    compile "org.springframework:spring-expression"
+    
+    compileOnly "javax:javaee-api:7.0"
+    compileOnly "javax.servlet:javax.servlet-api:3.1.0"
+    
+	compile "joda-time:joda-time:2.9.4"
+	compile "org.slf4j:slf4j-api:1.7.21"
+    
+    // Use JUnit test framework
+    testCompile 'junit:junit:4.12'
+}
